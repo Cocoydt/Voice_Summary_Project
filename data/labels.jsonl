@@ -1,0 +1,3 @@
+{"id": "utt_0001", "audio_path": "data/raw_audio/sample1.wav", "transcript_raw": "嗯那个就是我们明天然后去客户那边啊", "transcript_clean": "明天我们去客户那边。", "msg_type": "task", "summary_ref": "明天去客户那边。"}
+{"id": "utt_0002", "audio_path": "data/raw_audio/meeting1.wav", "transcript_raw": "呃那个就是明天开会时间定在下午三点吧", "transcript_clean": "明天下午三点开会。", "msg_type": "notice", "summary_ref": "明天下午三点开会，请准时参加。"}
+{"id": "utt_0003", "audio_path": "data/raw_audio/chat1.wav", "transcript_raw": "周末我去北京玩了，故宫人好多，不过挺值得的。", "transcript_clean": "周末我去北京玩了，故宫人好多，不过挺值得的。", "msg_type": "chitchat", "summary_ref": "周末去了北京，故宫人多但值得。"}
