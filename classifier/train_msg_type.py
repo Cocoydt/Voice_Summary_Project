@@ -16,11 +16,13 @@ def main():
 
     ds = ds.map(preprocess)
     model = BertForSequenceClassification.from_pretrained(MODEL_NAME, num_labels=3)
-
     args = TrainingArguments(
-        output_dir="./clf_out", evaluation_strategy="epoch",
-        learning_rate=2e-5, per_device_train_batch_size=8,
-        num_train_epochs=3, weight_decay=0.01
+        output_dir="./clf_out",
+        eval_strategy="epoch",  # 这里进行了修改
+        learning_rate=2e-5,
+        per_device_train_batch_size=8,
+        num_train_epochs=3,
+        weight_decay=0.01,
     )
 
     trainer = Trainer(model=model, args=args,
