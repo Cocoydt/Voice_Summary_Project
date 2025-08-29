@@ -1,0 +1,11 @@
+# Python-specific files
+__pycache__/
+*.pyc
+
+# Hugging Face Trainer output
+clf_out/
+lora_out/
+
+# Logs and temporary files
+*.log
+.DS_Store

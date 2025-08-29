@@ -1,208 +1,85 @@
-from datasets import load_dataset
-from transformers import MT5ForConditionalGeneration, T5Tokenizer
-from peft import LoraConfig, get_peft_model
-
-from datasets import load_dataset
-from transformers import MT5ForConditionalGeneration, T5Tokenizer, Trainer, TrainingArguments, DataCollatorForSeq2Seq
-from peft import LoraConfig, get_peft_model, prepare_model_for_kbit_training
-import torch
-
-# summarizer/train_lora.py
-from datasets import load_dataset
-from transformers import MT5ForConditionalGeneration, T5Tokenizer, Trainer, TrainingArguments, DataCollatorForSeq2Seq
-from peft import LoraConfig, get_peft_model, prepare_model_for_kbit_training
-import torch
 import sys
 import os
-
-# Add the parent directory (project root) to the Python path
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from datasets import load_dataset
-from transformers import MT5ForConditionalGeneration, T5Tokenizer, Trainer, TrainingArguments, DataCollatorForSeq2Seq
-from peft import LoraConfig, get_peft_model, prepare_model_for_kbit_training
 import torch
+from transformers import T5Tokenizer, MT5ForConditionalGeneration
+from peft import PeftModel
 
+# 这行代码让 Python 能够找到你项目根目录下的其他文件夹
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+# 导入口语化处理函数，用于处理输入文本
 from preprocess.remove_fillers import clean_fillers
 
-MODEL_NAME = "google/mt5-base"
-DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
+# 定义模型路径和基础模型名称
+LORA_OUT_PATH = "./summarizer/lora_out"
+MODEL_BASE = "google/mt5-base"
 
 
-def preprocess(example, tokenizer):
-    # 如果有干净转写就用，没有就清洗
-    text = example.get("transcript_clean") or clean_fillers(example["transcript_raw"])
+# 这个函数只在需要时加载模型，并返回一个可用的模型和分词器
+def load_models():
+    """加载基础MT5模型和LoRA微调权重"""
+    # 检查模型文件是否存在，如果不存在就报错
+    if not os.path.exists(LORA_OUT_PATH):
+        raise FileNotFoundError(f"模型文件未找到，请先运行 'train_lora.py' 来训练模型。")
 
-    msg_type = example.get("msg_type", "unknown")
-    emotion = example.get("emotion", "neutral")
-    emphasis = ",".join(example.get("prosody", {}).get("emphasis_tokens", [])) or "none"
+    print("正在加载基础 MT5 模型...")
+    base_model = MT5ForConditionalGeneration.from_pretrained(MODEL_BASE, torch_dtype=torch.float32)
 
-    prefix = f"[TYPE={msg_type}] [EMOTION={emotion}] [EMPHASIS={emphasis}]"
-    input_text = f"{prefix} 原文：{text}"
+    print("正在加载 LoRA 权重...")
+    model = PeftModel.from_pretrained(base_model, LORA_OUT_PATH)
 
-    model_inputs = tokenizer(input_text, truncation=True, padding="max_length", max_length=512)
-    labels = tokenizer(example["summary_ref"], truncation=True, padding="max_length", max_length=128)
-    model_inputs["labels"] = labels["input_ids"]
-    return model_inputs
+    print("正在加载分词器...")
+    tokenizer = T5Tokenizer.from_pretrained(LORA_OUT_PATH)
+
+    model.eval()  # 将模型设置为评估模式
+    return model, tokenizer
 
 
-def main():
-    # 加载原始数据
-    ds = load_dataset("json", data_files="data/labels.jsonl")
-    ds = ds['train'].train_test_split(test_size=0.1)  # 添加这行，用于创建 train 和 test 集
-    tokenizer = T5Tokenizer.from_pretrained(MODEL_NAME)
+# 这是你的核心摘要函数，它将由 run_pipeline.py 调用
+def summarize_with_mt5(model, tokenizer, text: str, msg_type: str):
+    """
+    根据文本和消息类型生成摘要。
 
-    # 数据预处理
-    tokenized_datasets = ds.map(lambda x: preprocess(x, tokenizer), remove_columns=ds["train"].column_names)
+    Args:
+        model: 训练好的PEFT模型。
+        tokenizer: 对应的分词器。
+        text: 需要生成摘要的文本。
+        msg_type: 消息类型标签。
 
-    # 模型 & LoRA 配置
-    model = MT5ForConditionalGeneration.from_pretrained(MODEL_NAME)
-    # 替换 prepare_model_for_int8_training 为 prepare_model_for_kbit_training
-    model = prepare_model_for_kbit_training(model)
+    Returns:
+        生成的摘要文本。
+    """
+    # 清理文本中的口语化词语，确保输入是干净的
+    clean_text = clean_fillers(text)
 
-    lora_config = LoraConfig(
-        r=8, lora_alpha=32, target_modules=["q", "v"],
-        lora_dropout=0.1, bias="none", task_type="SEQ_2_SEQ_LM"
-    )
-    model = get_peft_model(model, lora_config)
+    prompt = f"消息类型是【{msg_type}】。请将以下微信语音转录稿总结为一份简洁、重点突出的摘要。\n原文：{clean_text}\n摘要："
 
-    # 训练参数
-    args = TrainingArguments(
-        output_dir="./summarizer/lora_out",
-        per_device_train_batch_size=4,
-        per_device_eval_batch_size=4,
-        num_train_epochs=3,
-        learning_rate=2e-5,
-        eval_strategy="epoch",  # 修正为 epoch
-        save_strategy="epoch",
-        logging_dir="./logs",
-        fp16=False
-    )
+    inputs = tokenizer(prompt, return_tensors="pt")
 
-    data_collator = DataCollatorForSeq2Seq(tokenizer, model=model)
-    trainer = Trainer(
-        model=model,
-        args=args,
-        train_dataset=tokenized_datasets["train"],
-        eval_dataset=tokenized_datasets["test"],
-        data_collator=data_collator,
-        tokenizer=tokenizer
+    if torch.cuda.is_available():
+        model = model.to("cuda")
+        inputs = inputs.to("cuda")
+
+    outputs = model.generate(
+        **inputs,
+        max_length=128,
+        num_beams=4,
+        early_stopping=True
     )
 
-    trainer.train()
-    # 保存模型和分词器
-    model.save_pretrained("./summarizer/lora_out")
-    tokenizer.save_pretrained("./summarizer/lora_out")
+    summary = tokenizer.decode(outputs[0], skip_special_tokens=True)
+    return summary
 
 
 if __name__ == "__main__":
-    main()
-
-
-
-'''
-MODEL_NAME = "google/mt5-base"
-DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
-
-def preprocess(example, tokenizer):
-    msg_type = example.get("msg_type", "unknown")
-    emotion = example.get("emotion", "neutral")
-    emphasis = ",".join(example.get("prosody", {}).get("emphasis_tokens", [])) or "none"
-
-    prefix = f"[TYPE={msg_type}] [EMOTION={emotion}] [EMPHASIS={emphasis}]"
-    input_text = f"{prefix} 原文：{example['transcript_clean']}"
-
-    model_inputs = tokenizer(input_text, truncation=True, padding="max_length", max_length=512)
-    labels = tokenizer(example["summary_ref"], truncation=True, padding="max_length", max_length=128)
-
-    model_inputs["labels"] = labels["input_ids"]
-    return model_inputs
-
-def main():
-    # 加载数据集
-    ds = load_dataset("json", data_files="data/labels_cleaned.jsonl")
-    tokenizer = T5Tokenizer.from_pretrained(MODEL_NAME)
-
-    ds = ds.map(lambda x: preprocess(x, tokenizer), remove_columns=ds["train"].column_names)
-
-    model = MT5ForConditionalGeneration.from_pretrained(MODEL_NAME)
-    model = prepare_model_for_int8_training(model)
-
-    lora_config = LoraConfig(
-        r=8,
-        lora_alpha=32,
-        target_modules=["q", "v"],
-        lora_dropout=0.1,
-        bias="none",
-        task_type="SEQ_2_SEQ_LM"
-    )
-    model = get_peft_model(model, lora_config)
-
-    args = TrainingArguments(
-        output_dir="./summarizer/lora_out",
-        per_device_train_batch_size=4,
-        per_device_eval_batch_size=4,
-        num_train_epochs=3,
-        learning_rate=2e-5,
-        evaluation_strategy="no",
-        save_strategy="epoch",
-        logging_dir="./logs",
-        fp16=torch.cuda.is_available()
-    )
-
-    data_collator = DataCollatorForSeq2Seq(tokenizer, model=model)
-
-    trainer = Trainer(
-        model=model,
-        args=args,
-        train_dataset=ds["train"],
-        data_collator=data_collator,
-        tokenizer=tokenizer
-    )
-
-    trainer.train()
-    model.save_pretrained("./summarizer/lora_out")
-    tokenizer.save_pretrained("./summarizer/lora_out")
-
-if __name__ == "__main__":
-    main()
-
-
-MODEL_NAME = "google/mt5-base"
-
-def main():
-    ds = load_dataset("json", data_files="data/labels.jsonl")
-    tokenizer = T5Tokenizer.from_pretrained(MODEL_NAME)
-
-    def preprocess(ex):
-        ex["input_ids"] = tokenizer(f"总结以下内容: {ex['transcript_clean']}",
-                                    truncation=True, padding="max_length", max_length=512).input_ids
-        ex["labels"] = tokenizer(ex["summary_ref"], truncation=True, padding="max_length",
-                                 max_length=128).input_ids
-        return ex
-
-    def preprocess(ex):
-        msg_type = ex.get("msg_type", "unknown")
-        emotion = ex.get("emotion", "neutral")
-        emphasis = ",".join(ex.get("prosody", {}).get("emphasis_tokens", [])) or "none"
-
-        prefix = f"[TYPE={msg_type}] [EMOTION={emotion}] [EMPHASIS={emphasis}]"
-        input_text = f"{prefix} 原文：{ex['transcript_clean']}"
-
-        ex["input_ids"] = tokenizer(input_text, truncation=True, padding="max_length", max_length=512).input_ids
-        ex["labels"] = tokenizer(ex["summary_ref"], truncation=True, padding="max_length", max_length=128).input_ids
-        return ex
-
-
-
-    ds = ds.map(preprocess)
-
-    model = MT5ForConditionalGeneration.from_pretrained(MODEL_NAME)
-    lora_config = LoraConfig(r=8, lora_alpha=32, target_modules=["q","v"])
-    model = get_peft_model(model, lora_config)
-
-    model.train()
-    # 此处可用 Trainer 训练，略
-
-if __name__ == "__main__":
-    main()
-'''
+    # 这个代码块用于单独测试这个文件，不会被 run_pipeline.py 调用
+    try:
+        loaded_model, loaded_tokenizer = load_models()
+        sample_text = "小李啊，你那个项目报告，嗯，下周一之前发给我。"
+        sample_type = "task"
+        summary = summarize_with_mt5(loaded_model, loaded_tokenizer, sample_text, sample_type)
+        print(f"原文: {sample_text}")
+        print(f"摘要: {summary}")
+    except FileNotFoundError as e:
+        print(f"错误: {e}")
+        print("请先运行 'train_lora.py' 来生成模型文件。")
