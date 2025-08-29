@@ -8,7 +8,7 @@ from preprocess.remove_fillers import clean_fillers
 # from summarizer.mt5_summarize import summarize_with_mt5
 
 # 假设你的摘要模型已经训练并保存在summarizer/lora_out目录
-# 在这里直接导入并使用，而不是重新训练
+# 我们在这里直接导入并使用，而不是重新训练
 from transformers import T5Tokenizer, MT5ForConditionalGeneration
 from peft import PeftModel
 

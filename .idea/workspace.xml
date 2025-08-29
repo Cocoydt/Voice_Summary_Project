@@ -7,7 +7,7 @@
     <list default="true" id="685a7c73-34fa-4fe3-9d6e-856f4464004d" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/run_pipeline.py" beforeDir="false" afterPath="$PROJECT_DIR$/run_pipeline.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/summarizer/train_lora.py" beforeDir="false" afterPath="$PROJECT_DIR$/summarizer/train_lora.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/summarizer/mt5_summarize.py" beforeDir="false" afterPath="$PROJECT_DIR$/summarizer/mt5_summarize.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -92,7 +92,7 @@
       <updated>1756195617070</updated>
       <workItem from="1756195621467" duration="114000" />
       <workItem from="1756302629277" duration="4316000" />
-      <workItem from="1756339934031" duration="16084000" />
+      <workItem from="1756339934031" duration="16918000" />
     </task>
     <servers />
   </component>
