@@ -31,5 +31,10 @@ def main():
                       tokenizer=tokenizer)
     trainer.train()
 
+    # --- 保存模型 ---
+    print("\nTraining complete! Saving model...")
+    trainer.save_model("./clf_out")
+    print("Model saved to ./clf_out")
+
 if __name__ == "__main__":
     main()

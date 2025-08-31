@@ -1,4 +1,4 @@
-# run_pipeline_mt5.py
+# run_pipeline.py
 
 import sys
 import os
