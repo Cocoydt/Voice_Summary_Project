@@ -30,36 +30,22 @@ def load_models():
 
 import json
 
+
+# summarizer/mt5_summarize.py
+
+# ... (其他导入和代码保持不变)
+# summarizer/mt5_summarize.py
+
+# ... (其他导入和代码保持不变)
 def summarize_with_mt5(model, tokenizer, text: str, msg_type: str):
+    """
+    根据文本和消息类型生成摘要。
+    """
     clean_text = clean_fillers(text)
 
-    # 根据消息类型选择不同的 Prompt 和输出示例
-    if msg_type == "notice":
-        prompt = (
-            f"你是一名高效的语义分析助手。请将以下微信语音转录稿总结为一份结构化的JSON摘要，重点突出通知内容和要点。\n"
-            f"请严格遵循以下JSON格式输出：{{\"type\": \"notice\", \"notice_content\": [\"...\"], \"bullets\": [\"...\"]}}\n"
-            f"原文：{clean_text}\n"
-            f"摘要：")
-    elif msg_type == "task":
-        prompt = (
-            f"你是一名高效的语义分析助手。请从以下文本中提取主语、动词和名词。请将以下微信语音转录稿总结为一份结构化的JSON摘要，重点突出待办任务和关键信息（人物、时间）。\n"
-            f"请严格遵循以下JSON格式输出：{{\"type\": \"task\", \"tasks\": [\"...\"], \"mentions\": [\"...\"]}}\n"
-            f"原文：{clean_text}\n"
-            f"摘要：")
-    elif msg_type == "chitchat":
-        prompt = (
-            f"你是一名高效的语义分析助手。请从以下文本中提取主语、动词和名词。请将以下微信语音转录稿总结为一份结构化的JSON摘要，记录核心事件或情绪。\n"
-            f"请严格遵循以下JSON格式输出：{{\"type\": \"chitchat\", \"event\": [\"...\"], \"emotion\": \"...\"}}\n"
-            f"原文：{clean_text}\n"
-            f"摘要：")
-    else:
-        prompt = (
-            f"你是一名高效的语义分析助手。请从以下文本中提取主语、动词和名词。请将以下微信语音转录稿总结为一份结构化的JSON摘要。\n"
-            f"请严格遵循以下JSON格式输出：{{\"type\": \"unknown\", \"summary\": \"...\"}}\n"
-            f"原文：{clean_text}\n"
-            f"摘要：")
+    prompt = f"消息类型是【{msg_type}】。请将以下微信语音转录稿总结为一份简洁、重点突出的摘要。\n原文：{clean_text}\n摘要："
 
-    inputs = tokenizer(prompt, return_tensors="pt")
+    inputs = tokenizer(prompt, truncation=True, padding="max_length", max_length=512, return_tensors="pt")
 
     if torch.cuda.is_available():
         model = model.to("cuda")
@@ -73,9 +59,4 @@ def summarize_with_mt5(model, tokenizer, text: str, msg_type: str):
     )
 
     summary_str = tokenizer.decode(outputs[0], skip_special_tokens=True)
-    try:
-        summary_json = json.loads(summary_str)
-        return summary_json
-    except json.JSONDecodeError:
-        print("警告: 无法解析 JSON 格式的摘要，返回原始文本。")
-        return summary_str
+    return summary_str

@@ -6,8 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="685a7c73-34fa-4fe3-9d6e-856f4464004d" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CHI智能耳机_数据表.csv" beforeDir="false" afterPath="$PROJECT_DIR$/CHI智能耳机_数据表.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/labels.jsonl" beforeDir="false" afterPath="$PROJECT_DIR$/data/labels.jsonl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/run_pipeline.py" beforeDir="false" afterPath="$PROJECT_DIR$/run_pipeline.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/summarizer/mt5_summarize.py" beforeDir="false" afterPath="$PROJECT_DIR$/summarizer/mt5_summarize.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/summarizer/train_lora.py" beforeDir="false" afterPath="$PROJECT_DIR$/summarizer/train_lora.py" afterDir="false" />
@@ -96,18 +95,13 @@
       <workItem from="1756195621467" duration="114000" />
       <workItem from="1756302629277" duration="4316000" />
       <workItem from="1756339934031" duration="16918000" />
-      <workItem from="1756577455577" duration="27507000" />
+      <workItem from="1756577455577" duration="32107000" />
     </task>
     <servers />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/summarizer/train_lora.py</url>
-          <line>146</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/run_pipeline_mt5.py</url>
           <line>14</line>
