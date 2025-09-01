@@ -6,57 +6,10 @@
   <component name="ChangeListManager">
     <list default="true" id="685a7c73-34fa-4fe3-9d6e-856f4464004d" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/check_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/check_data.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/classifier/inference.py" beforeDir="false" afterPath="$PROJECT_DIR$/classifier/inference.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/classifier/train_msg_type.py" beforeDir="false" afterPath="$PROJECT_DIR$/classifier/train_msg_type.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/convert_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/convert_data.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/labels.jsonl" beforeDir="false" afterPath="$PROJECT_DIR$/data/labels.jsonl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/raw_audio/任务_开心_吃火锅_女.mp3" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/generate_audio.py" beforeDir="false" afterPath="$PROJECT_DIR$/generate_audio.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/preprocess/remove_fillers.py" beforeDir="false" afterPath="$PROJECT_DIR$/preprocess/remove_fillers.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CHI智能耳机_数据表.csv" beforeDir="false" afterPath="$PROJECT_DIR$/CHI智能耳机_数据表.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/run_pipeline.py" beforeDir="false" afterPath="$PROJECT_DIR$/run_pipeline.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/run_pipeline_mt5.py" beforeDir="false" afterPath="$PROJECT_DIR$/run_pipeline_mt5.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/speech_processor/emotion_recognizer.py" beforeDir="false" afterPath="$PROJECT_DIR$/speech_processor/emotion_recognizer.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/speech_processor/prosody_analyzer.py" beforeDir="false" afterPath="$PROJECT_DIR$/speech_processor/prosody_analyzer.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/summarizer/lora_out/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/summarizer/lora_out/adapter_config.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/summarizer/lora_out/adapter_model.safetensors" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/summarizer/lora_out/checkpoint-1/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/summarizer/lora_out/checkpoint-1/adapter_config.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/summarizer/lora_out/checkpoint-1/adapter_model.safetensors" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/summarizer/lora_out/checkpoint-1/optimizer.pt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/summarizer/lora_out/checkpoint-1/rng_state.pth" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/summarizer/lora_out/checkpoint-1/scheduler.pt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/summarizer/lora_out/checkpoint-1/special_tokens_map.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/summarizer/lora_out/checkpoint-1/spiece.model" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/summarizer/lora_out/checkpoint-1/tokenizer_config.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/summarizer/lora_out/checkpoint-1/trainer_state.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/summarizer/lora_out/checkpoint-1/training_args.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/summarizer/lora_out/checkpoint-2/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/summarizer/lora_out/checkpoint-2/adapter_config.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/summarizer/lora_out/checkpoint-2/adapter_model.safetensors" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/summarizer/lora_out/checkpoint-2/optimizer.pt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/summarizer/lora_out/checkpoint-2/rng_state.pth" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/summarizer/lora_out/checkpoint-2/scheduler.pt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/summarizer/lora_out/checkpoint-2/special_tokens_map.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/summarizer/lora_out/checkpoint-2/spiece.model" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/summarizer/lora_out/checkpoint-2/tokenizer_config.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/summarizer/lora_out/checkpoint-2/trainer_state.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/summarizer/lora_out/checkpoint-2/training_args.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/summarizer/lora_out/checkpoint-3/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/summarizer/lora_out/checkpoint-3/adapter_config.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/summarizer/lora_out/checkpoint-3/adapter_model.safetensors" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/summarizer/lora_out/checkpoint-3/optimizer.pt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/summarizer/lora_out/checkpoint-3/rng_state.pth" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/summarizer/lora_out/checkpoint-3/scheduler.pt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/summarizer/lora_out/checkpoint-3/special_tokens_map.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/summarizer/lora_out/checkpoint-3/spiece.model" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/summarizer/lora_out/checkpoint-3/tokenizer_config.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/summarizer/lora_out/checkpoint-3/trainer_state.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/summarizer/lora_out/checkpoint-3/training_args.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/summarizer/lora_out/special_tokens_map.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/summarizer/lora_out/spiece.model" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/summarizer/lora_out/tokenizer_config.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/summarizer/mt5_summarize.py" beforeDir="false" afterPath="$PROJECT_DIR$/summarizer/mt5_summarize.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/summarizer/train_lora.py" beforeDir="false" afterPath="$PROJECT_DIR$/summarizer/train_lora.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -143,9 +96,25 @@
       <workItem from="1756195621467" duration="114000" />
       <workItem from="1756302629277" duration="4316000" />
       <workItem from="1756339934031" duration="16918000" />
-      <workItem from="1756577455577" duration="22976000" />
+      <workItem from="1756577455577" duration="27507000" />
     </task>
     <servers />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/summarizer/train_lora.py</url>
+          <line>146</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/run_pipeline_mt5.py</url>
+          <line>14</line>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/CHIProject$main.coverage" NAME="main Coverage Results" MODIFIED="1756322929449" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
