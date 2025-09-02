@@ -1,0 +1,6 @@
+{
+  "samples_evaluated": 915,
+  "avg_rouge1": 0.05981785063752277,
+  "avg_rougeL": 0.05927140255009108,
+  "emotion_accuracy": 0.9989071038251366
+}

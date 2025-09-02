@@ -1,11 +1,42 @@
-# Python-specific files
-__pycache__/
-*.pyc
 
 # Hugging Face Trainer output
 clf_out/
 lora_out/
 
-# Logs and temporary files
-*.log
+# 忽略所有包含 "key"、"secret"、"token" 等敏感信息的文件
+*key*
+*secret*
+*token
+*.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# 忽略Python的虚拟环境目录
+venv/
+env/
+.venv/
+
+# 忽略Python编译缓存和发行文件
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.so
+dist/
+build/
+
+# 忽略IDE和编辑器配置文件
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# 忽略系统文件
 .DS_Store
+Thumbs.db
+
+# 忽略日志文件
+*.log
+logs/
