@@ -40,3 +40,7 @@ Thumbs.db
 # 忽略日志文件
 *.log
 logs/
+
+*.iml
+*.jsonl
+*.save
