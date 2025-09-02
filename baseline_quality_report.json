@@ -1,6 +1,0 @@
-{
-  "samples_evaluated": 20,
-  "avg_rouge1": 0.05,
-  "avg_rougeL": 0.05,
-  "emotion_accuracy": 0.05
-}
