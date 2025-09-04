@@ -8,6 +8,11 @@ from openai import OpenAI
 # ---------------------------
 # 初始化 OpenAI 客户端
 # ---------------------------
+
+from summarizer.segmenter import (
+    try_asr_with_segments, vad_segments, equal_splits,
+    allocate_text_by_spans, build_segment_prompt
+)
 client = OpenAI(
     base_url='https://api.openai-proxy.org/v1',
     api_key='REDACTED_OPENAI_KEY'
