@@ -1,20 +1,18 @@
 import json
 import pandas as pd
+from openai import OpenAI
 import argparse
-# 移除 openai 导入，引入 dashscope
-import dashscope
-from dashscope import Generation
 
-# === 配置 ===
-INPUT_CSV = "data/compare_text.csv" #"CHI智能耳机_数据表.csv"
-OUTPUT_JSONL = "baseline_results_qwen.jsonl"
-MODEL_NAME = "qwen-plus"  # 现在可以正常工作
-CURRENT_DATE = "2025-09-01"
-
-# 设置您的 DashScope API Key
-dashscope.api_key = "REDACTED_OPENAI_KEY"
+# 初始化 API 客户端
+client = OpenAI(
+    base_url='https://api.openai-proxy.org/v1',
+    api_key='REDACTED_OPENAI_KEY',
+)
 
 def build_prompt(row):
+    """
+    构建提示词：生成总摘要 + 分段摘要（含原文片段）
+    """
     return f"""
 你是一名智能助理，需要根据以下语音转写文本生成 **总摘要** 和 **分段摘要**。
 
@@ -45,37 +43,30 @@ def build_prompt(row):
 }}
 
 规则：
-1. 根据文本长度决定分 2 段或 3 段。
-2. 原文片段请从输入文本中截取相关内容。
-3. 时间范围按顺序均分。
-4. 仅返回 JSON，不要任何解释。
+1. 根据文本长度决定分 2 段或 3 段，每段需覆盖主要信息。
+2. 原文片段请从输入文本中截取相关内容（不必精确时间对齐，模拟即可）。
+3. 时间范围按顺序均分（如 0:00-0:20、0:20-0:40）。
+4. 仅返回 JSON，不要任何解释文字。
 """
 
 def call_model(prompt):
+    """
+    调用 OpenAI 模型
+    """
     try:
-        # 使用 DashScope Generation 的 call 方法
-        response = Generation.call(
-            model=MODEL_NAME,  # 直接使用配置的模型名
-            prompt=prompt,  # DashScope 原生方式直接传 prompt
-            temperature=0.3,
-            result_format='message'  # 确保返回格式与后续代码解析匹配
+        response = client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[{"role": "user", "content": prompt}],
+            temperature=0.3
         )
-
-        # 检查请求是否成功
-        if response.status_code == 200:
-            # 返回模型生成的内容
-            # 注意：DashScope返回的数据结构不同于OpenAI
-            return response.output.choices[0].message.content
-        else:
-            return f"API 调用错误: Error code: {response.status_code} - {response.message}"
-
+        return response.choices[0].message.content
     except Exception as e:
-        return f"API 调用异常: {str(e)}"
+        return f"API 调用错误: {str(e)}"
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--input", type=str, default=INPUT_CSV)
-    parser.add_argument("--output", type=str, default="baseline_segments_qwen.jsonl")
+    parser.add_argument("--input", type=str, default="data/compare_text.csv") #"CHI智能耳机_数据表.csv"
+    parser.add_argument("--output", type=str, default="data/baseline_segments_openai.jsonl")
     parser.add_argument("--limit", type=int, default=10)
     args = parser.parse_args()
 
@@ -105,6 +96,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-
